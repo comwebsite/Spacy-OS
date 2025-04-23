@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -10,17 +11,39 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
-      /* Космические обои */
-      background-image: url('https://cdn.pixabay.com/photo/2016/11/29/09/08/galaxy-1867180_1280.jpg');
+      /* Черная тема по умолчанию – космические обои по указанному URL */
+      background-image: url('https://image.fonwall.ru/o/tj/andromeda-digital-universe-galaxy-cartoons.jpeg?auto=compress&fit=crop&w=1366&h=768&domain=img1.fonwall.ru');
       background-size: cover;
       background-position: center;
       overflow: hidden;
+      /* Пользовательский курсор */
+      cursor: url('https://img.icons8.com/external-flat-icons-inmotus-design/40/000000/external-cursor-interface-flat-icons-inmotus-design.png'), auto;
     }
-    /* Иконки рабочего стола, располагаем их в колонку */
-    #desktop {
+    /* Экран входа */
+    #loginScreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+    /* Контейнер рабочего стола – два столбика */
+    #desktopContainer {
       position: absolute;
       top: 10px;
       left: 10px;
+      display: flex;
+      gap: 50px;
+      padding: 10px;
+    }
+    #desktopContainer div {
       display: flex;
       flex-direction: column;
       gap: 10px;
@@ -28,8 +51,8 @@
     .desktop-icon {
       width: 80px;
       text-align: center;
-      color: #fff;
       cursor: pointer;
+      color: #fff;
     }
     .desktop-icon img {
       width: 48px;
@@ -37,7 +60,7 @@
       display: block;
       margin: 0 auto;
     }
-    /* Окна программ */
+    /* Окна приложений */
     .window {
       position: absolute;
       background-color: #fff;
@@ -62,7 +85,7 @@
     }
     .window-content {
       padding: 10px;
-      overflow: auto;
+      overflow-y: auto;
       height: calc(100% - 30px);
     }
     .close-btn {
@@ -81,6 +104,7 @@
       align-items: center;
       padding: 0 10px;
       box-sizing: border-box;
+      z-index: 50;
     }
     #taskbar .taskbar-button {
       color: #fff;
@@ -91,7 +115,7 @@
       margin-left: auto;
       color: #fff;
     }
-    /* Форма и элементы управления */
+    /* Элементы форм */
     input[type="text"],
     input[type="number"],
     select,
@@ -110,8 +134,10 @@
       word-wrap: break-word;
       font-family: monospace;
     }
-    ul { padding-left: 20px; }
-    /* Стили для маленьких иконок в приложениях */
+    ul {
+      padding-left: 20px;
+    }
+    /* Стили для маленьких иконок внутри окон приложений */
     .app-icon {
       text-align: center;
       margin-bottom: 10px;
@@ -120,52 +146,78 @@
       width: 48px;
       height: 48px;
     }
+    /* Стили для разделов внутри окон (например, Spos Media Player) */
+    .section {
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
-
-  <!-- Аудио-элементы (несколько звуков) -->
-  <audio id="soundStart" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
-  <audio id="soundClick" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
-  <audio id="soundTerminal" src="https://www.soundjay.com/button/sounds/beep-02.mp3" preload="auto"></audio>
-
-  <!-- Рабочий стол: программа расположены в колонку -->
-  <div id="desktop">
-    <div class="desktop-icon" onclick="openWindow('computerWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/computer.png" alt="Компьютер">
-      <div>Компьютер</div>
+  <!-- Экран входа -->
+  <div id="loginScreen">
+    <h2>Вход в систему</h2>
+    <form id="loginForm">
+      <label for="loginUsername">Имя пользователя:</label>
+      <input type="text" id="loginUsername" placeholder="user" required>
+      <button type="submit">Войти</button>
+    </form>
+  </div>
+  <!-- Контейнер рабочего стола (скрыт до входа) -->
+  <div id="desktopContainer" style="display:none;">
+    <!-- Первый столбик -->
+    <div id="desktopColumn1">
+      <div class="desktop-icon" onclick="openWindow('computerWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/computer.png" alt="Компьютер">
+        <div>Компьютер</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('calendarWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/calendar.png" alt="Календарь">
+        <div>Календарь</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('reportWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/report-card.png" alt="Service Reporting">
+        <div>Service Reporting</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('reportHistoryWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/time-machine.png" alt="History of reports">
+        <div>History of reports</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('terminalWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/console.png" alt="Терминал">
+        <div>Терминал</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('osChangesWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/update-left-rotation.png" alt="Изменения в ОС">
+        <div>Изменения в ОС</div>
+      </div>
     </div>
-    <div class="desktop-icon" onclick="openWindow('calendarWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/calendar.png" alt="Календарь">
-      <div>Календарь</div>
-    </div>
-    <div class="desktop-icon" onclick="openWindow('reportWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/report-card.png" alt="Отчёт">
-      <div>Отчёт</div>
-	  </div>
-    <div class="desktop-icon" onclick="openWindow('reportHistoryWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/time-machine.png" alt="История отчётов">
-      <div>История отчётов</div>
-    </div>
-    <div class="desktop-icon" onclick="openWindow('terminalWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/console.png" alt="Терминал">
-      <div>Терминал</div>
-    </div>
-    <div class="desktop-icon" onclick="openWindow('osChangesWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/update-left-rotation.png" alt="Изменения в ОС">
-      <div>Изменения в ОС</div>
-    </div>
-    <div class="desktop-icon" onclick="openWindow('mediaPlayerWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/video-player.png" alt="Spos Media Player">
-      <div>Spos Media Player</div>
-    </div>
-    <div class="desktop-icon" onclick="openWindow('electronicDiaryWindow'); playSound('soundClick');">
-      <img src="https://img.icons8.com/fluency/48/notes.png" alt="Электронный дневник">
-      <div>Электронный дневник</div>
+    <!-- Второй столбик -->
+    <div id="desktopColumn2">
+      <div class="desktop-icon" onclick="openWindow('mediaPlayerWindow'); playSound('soundClick');">
+        <img src="data:image/png;base64,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" alt="Spos Media Player">
+        <div>Spos Media Player</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('calculatorWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/calculator.png" alt="Калькулятор">
+        <div>Калькулятор</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('updateWindow'); playSound('soundClick');">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5R0CknnnYF_c0Siko_inKqJG8TcT8UTXWKA&s" alt="Обновление">
+        <div>Обновление</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('paintWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/paint-palette.png" alt="Paint">
+        <div>Paint</div>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('antivirusWindow'); playSound('soundClick');">
+        <img src="https://img.icons8.com/fluency/48/virus.png" alt="Spos Antivirus">
+        <div>Spos Antivirus</div>
+      </div>
     </div>
   </div>
+  <!-- ОКНА ПРИЛОЖЕНИЙ -->
 
-  <!-- Окно "Компьютер" -->
+  <!-- Компьютер -->
   <div id="computerWindow" class="window">
     <div class="window-header">
       <span>Компьютер</span>
@@ -174,18 +226,18 @@
     <div class="window-content">
       <p>Ваш компьютер</p>
       <p>Имя ОС: SpacyOS</p>
-      <p>Версия: 1.0.2</p>
+      <p>Версия: 1.0.5</p>
       <p>Изготовитель ОС: spos Corporation</p>
-      <p>Имя системы: DESKTOP-V1.0.2.A</p>
+      <p>Имя системы: DESKTOP-V1.0.5.A</p>
       <p>Тип: Компьютер на базе x64</p>
       <p>Папка SpacyOS: C:\SPACYOS</p>
       <p>Системная папка: system32</p>
       <p>Язык системы: Русский (Россия)</p>
-      <p>Имя пользователя: user</p>
+      <p>Имя пользователя: <span id="compUsername">user</span></p>
     </div>
   </div>
 
-  <!-- Окно "Календарь" -->
+  <!-- Календарь -->
   <div id="calendarWindow" class="window">
     <div class="window-header">
       <span>Календарь</span>
@@ -201,55 +253,61 @@
     </div>
   </div>
 
-  <!-- Окно "Отчёт" -->
+  <!-- Service Reporting -->
   <div id="reportWindow" class="window">
     <div class="window-header">
-      <span>Отчёт</span>
+      <span>Service Reporting</span>
       <span class="close-btn" onclick="closeWindow('reportWindow'); playSound('soundClick');">X</span>
     </div>
-    <div class="window-content" id="reportContent">
+    <div class="window-content">
+      <!-- Добавляем прокрутку, если содержимое превышает высоту окна -->
       <form id="reportForm">
-        <label>Сколько времени вы проработали:</label>
-        <input type="number" id="workTime" required>
-        <label>Сколько времени вы уделили программированию:</label>
-        <input type="number" id="codingTime" required>
+        <label>Температура воздуха °C:</label>
+        <input type="text" id="airTemperature" pattern="^[\d.,]+$" title="Допускаются цифры, точки и запятые" required>
+        <label>Сколько часов вы уделили работе:</label>
+        <input type="number" id="workHours" required>
+        <label>Сколько часов вы уделили программированию:</label>
+        <input type="number" id="programmingHours" required>
         <label>Погода:</label>
         <select id="weather">
-          <option value="ясно">Ясно</option>
-          <option value="облачно">Облачно</option>
-          <option value="дождь">Дождь</option>
-          <option value="снег">Снег</option>
+          <option value="Ясно">Ясно</option>
+          <option value="Облачно">Облачно</option>
+          <option value="Ветрено">Ветрено</option>
+          <option value="Дождь">Дождь</option>
+          <option value="Снег">Снег</option>
+          <option value="Шторм">Шторм</option>
         </select>
-        <label>Powered by:</label>
-        <input type="text" id="poweredBy" required>
+        <label>Reporting by:</label>
+        <input type="text" id="reportBy" required>
         <button type="submit">Отправить отчёт</button>
       </form>
     </div>
   </div>
 
-  <!-- Окно "История отчётов" -->
+  <!-- History of reports -->
   <div id="reportHistoryWindow" class="window">
     <div class="window-header">
-      <span>История отчётов</span>
+      <span>History of reports</span>
       <span class="close-btn" onclick="closeWindow('reportHistoryWindow'); playSound('soundClick');">X</span>
     </div>
     <div class="window-content">
       <div id="reportHistoryContent">Нет отчётов</div>
     </div>
   </div>
-  <!-- Окно "Терминал" -->
+
+  <!-- Терминал -->
   <div id="terminalWindow" class="window">
     <div class="window-header">
       <span>Терминал</span>
       <span class="close-btn" onclick="closeWindow('terminalWindow'); playSound('soundClick');">X</span>
     </div>
     <div class="window-content">
-      <div id="terminalOutput" style="height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 5px; background: #000; color: #0f0;"></div>
-      <input type="text" id="terminalInput" placeholder="Введите команду..." onkeydown="if(event.key === 'Enter'){ handleTerminalCommand(); }">
+      <div id="terminalOutput" style="height:200px; overflow-y:auto; border:1px solid #ccc; padding:5px; background:#000; color:#0f0;"></div>
+      <input type="text" id="terminalInput" placeholder="Введите команду..." onkeydown="if(event.key==='Enter'){ handleTerminalCommand(); }">
     </div>
   </div>
 
-  <!-- Окно "Изменения в ОС" -->
+  <!-- Изменения в ОС -->
   <div id="osChangesWindow" class="window">
     <div class="window-header">
       <span>Изменения в ОС</span>
@@ -257,78 +315,178 @@
     </div>
     <div class="window-content">
       <pre>
-Добавления:
-  Программа Spos Media Player
-  Программа Изменения в ОС
-  Программа Электронный дневник
-  Добавлены новые команды в программе Терминал
-
-Изменения:
-  Версия ОС: 1.0.2
-  Изменены параметры программы Настройки
+Добавлены новые программы, доступные на рабочем столе
+Новые фото, видео и звуки в Spos Media Player
+Новые обои для рабочего стола
+Исправлены баги системы
+Улучшена защита системы
       </pre>
     </div>
   </div>
-
-  <!-- Окно "Spos Media Player" с иконкой -->
+  <!-- Spos Media Player -->
   <div id="mediaPlayerWindow" class="window">
     <div class="window-header">
       <span>Spos Media Player</span>
       <span class="close-btn" onclick="closeWindow('mediaPlayerWindow'); playSound('soundClick');">X</span>
     </div>
     <div class="window-content">
-      <!-- Иконка приложения -->
-      <div class="app-icon">
-        <img src="https://img.icons8.com/fluency/48/video.png" alt="Media Icon">
+      <!-- Убираем повторное название внутри интерфейса -->
+      <!-- Видео 1 -->
+      <div class="section">
+        <div class="app-icon">
+          <img src="data:image/png;base64,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" alt="Видео">
+        </div>
+        <h4>Видео 1</h4>
+        <video controls width="100%">
+          <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
       </div>
-      <video controls width="100%">
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-        Ваш браузер не поддерживает видео.
-      </video>
+      <!-- Видео 2 -->
+      <div class="section">
+        <div class="app-icon">
+          <img src="https://img.icons8.com/fluency/48/video-projector.png" alt="Видео">
+        </div>
+        <h4>Видео 2</h4>
+        <video controls width="100%">
+          <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
+      </div>
+      <!-- Видео 3 (новое) -->
+      <div class="section">
+        <div class="app-icon">
+          <img src="https://img.icons8.com/fluency/48/video-playlist.png" alt="Видео">
+        </div>
+        <h4>Видео 3</h4>
+        <video controls width="100%">
+          <source src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" type="video/mp4">
+          Ваш браузер не поддерживает видео.
+        </video>
+      </div>
+      <!-- Аудио (новый звук) -->
+      <div class="section">
+        <div class="app-icon">
+          <img src="https://img.icons8.com/fluency/48/audio.png" alt="Аудио">
+        </div>
+        <h4>Аудио</h4>
+        <audio controls>
+          <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mp3">
+          Ваш браузер не поддерживает аудио.
+        </audio>
+      </div>
+      <!-- Фото (новое) -->
+      <div class="section">
+        <div class="app-icon">
+          <img src="https://img.icons8.com/fluency/48/picture.png" alt="Фото">
+        </div>
+        <h4>Фото</h4>
+        <img src="data:image/jpeg;base64,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" alt="Новое фото" style="width:100%;">
+      </div>
     </div>
   </div>
 
-  <!-- Окно "Электронный дневник" с иконкой -->
-  <div id="electronicDiaryWindow" class="window">
+  <!-- Калькулятор -->
+  <div id="calculatorWindow" class="window">
     <div class="window-header">
-      <span>Электронный дневник</span>
-      <span class="close-btn" onclick="closeWindow('electronicDiaryWindow'); playSound('soundClick');">X</span>
+      <span>Калькулятор</span>
+      <span class="close-btn" onclick="closeWindow('calculatorWindow'); playSound('soundClick');">X</span>
     </div>
-    <div class="window-content" id="diaryContent">
-      <!-- Иконка приложения -->
-      <div class="app-icon">
-        <img src="https://img.icons8.com/fluency/48/open-book.png" alt="Diary Icon">
+    <div class="window-content">
+      <input type="text" id="calcDisplay" readonly style="width:100%; font-size:20px; text-align:right;">
+      <div id="calculatorButtons" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:5px; margin-top:10px;">
+        <button onclick="calculatorButtonClick('7')">7</button>
+        <button onclick="calculatorButtonClick('8')">8</button>
+        <button onclick="calculatorButtonClick('9')">9</button>
+        <button onclick="calculatorButtonClick('/')">/</button>
+        <button onclick="calculatorButtonClick('4')">4</button>
+        <button onclick="calculatorButtonClick('5')">5</button>
+        <button onclick="calculatorButtonClick('6')">6</button>
+        <button onclick="calculatorButtonClick('*')">*</button>
+        <button onclick="calculatorButtonClick('1')">1</button>
+        <button onclick="calculatorButtonClick('2')">2</button>
+        <button onclick="calculatorButtonClick('3')">3</button>
+        <button onclick="calculatorButtonClick('-')">-</button>
+        <button onclick="calculatorButtonClick('0')">0</button>
+        <button onclick="calculatorButtonClick('.')">.</button>
+        <button onclick="calculateResult()">=</button>
+        <button onclick="calculatorButtonClick('+')">+</button>
+        <button onclick="clearCalculator()" style="grid-column: span 4;">C</button>
       </div>
-      <form id="diaryForm">
-        <label>Ваня:</label>
-        <select id="vanya">
-          <option value="+">+</option>
-          <option value="-">-</option>
-        </select>
-        <label>Полина:</label>
-        <select id="polina">
-          <option value="+">+</option>
-          <option value="-">-</option>
-        </select>
-        <button type="submit">ОК</button>
-      </form>
-      <div id="diaryResult"></div>
+    </div>
+  </div>
+  <!-- Обновление -->
+  <div id="updateWindow" class="window">
+    <div class="window-header">
+      <span>Обновление</span>
+      <span class="close-btn" onclick="closeWindow('updateWindow'); playSound('soundClick');">X</span>
+    </div>
+    <div class="window-content">
+      <!-- В меню обновления внутри окна добавлена только одна иконка -->
+      <div class="app-icon">
+        <img src="https://img.icons8.com/fluency/48/update.png" alt="Update Icon">
+      </div>
+      <p>Используйте кнопки ниже для проверки и обновления системы.</p>
+      <button onclick="checkUpdates()">Проверить компьютер</button>
+      <button onclick="updateComputer()">Обновить компьютер</button>
+      <div id="updateResult" style="margin-top:10px;"></div>
     </div>
   </div>
 
-  <!-- Окно "Блокнот" -->
+  <!-- Paint -->
+  <div id="paintWindow" class="window">
+    <div class="window-header">
+      <span>Paint</span>
+      <span class="close-btn" onclick="closeWindow('paintWindow'); playSound('soundClick');">X</span>
+    </div>
+    <div class="window-content">
+      <button onclick="clearCanvas()">Очистить</button>
+      <canvas id="paintCanvas" width="360" height="240" style="border:1px solid #000; display:block; margin-top:10px;"></canvas>
+    </div>
+  </div>
+
+  <!-- Spos Antivirus -->
+  <div id="antivirusWindow" class="window">
+    <div class="window-header">
+      <span>Spos Antivirus</span>
+      <span class="close-btn" onclick="closeWindow('antivirusWindow'); playSound('soundClick');">X</span>
+    </div>
+    <div class="window-content">
+      <label for="antivirusType">Тип проверки:</label>
+      <select id="antivirusType">
+        <option value="быстрая">Быстрая проверка</option>
+        <option value="выборочная">Выборочная проверка</option>
+        <option value="полная">Полная проверка</option>
+      </select>
+      <button onclick="startAntivirusCheck()">Начать проверку</button>
+      <div id="antivirusResult" style="margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <!-- Учётная запись -->
+  <div id="accountWindow" class="window">
+    <div class="window-header">
+      <span>Учётная запись</span>
+      <span class="close-btn" onclick="closeWindow('accountWindow'); playSound('soundClick');">X</span>
+    </div>
+    <div class="window-content">
+      <p id="accountUserInfo">Имя пользователя: user<br>Электронная почта: user0000000@gmail.com</p>
+    </div>
+  </div>
+
+  <!-- Блокнот -->
   <div id="notepadWindow" class="window">
     <div class="window-header">
       <span>Блокнот</span>
       <span class="close-btn" onclick="closeWindow('notepadWindow'); playSound('soundClick');">X</span>
     </div>
     <div class="window-content">
-      <textarea id="notepadContent" rows="10" style="width: 100%;"></textarea>
+      <textarea id="notepadContent" rows="10" style="width:100%;"></textarea>
       <button onclick="saveNotepad(); playSound('soundClick');">Сохранить</button>
     </div>
   </div>
 
-  <!-- Окно "Настройки" -->
+  <!-- Настройки -->
   <div id="settingsWindow" class="window">
     <div class="window-header">
       <span>Настройки</span>
@@ -344,7 +502,7 @@
         <label>Текущая тема:</label>
         <select id="themeSetting">
           <option value="black">Черная</option>
-		  <option value="white">Белая</option>
+          <option value="white">Белая</option>
         </select>
         <label>Раскладка:</label>
         <select id="layoutSetting">
@@ -356,7 +514,7 @@
     </div>
   </div>
 
-  <!-- Окно "Проводник" -->
+  <!-- Проводник -->
   <div id="explorerWindow" class="window">
     <div class="window-header">
       <span>Проводник</span>
@@ -368,25 +526,29 @@
     </div>
   </div>
 
-  <!-- Окно "Меню Пуск" -->
-  <div id="startMenuWindow" class="window" style="width: 300px; height: 400px;">
+  <!-- Меню Пуск -->
+  <div id="startMenuWindow" class="window" style="width:300px; height:400px;">
     <div class="window-header">
       <span>Меню Пуск</span>
       <span class="close-btn" onclick="closeWindow('startMenuWindow'); playSound('soundClick');">X</span>
     </div>
     <div class="window-content">
-      <ul style="list-style: none; padding: 0;">
-        <li style="cursor: pointer;" onclick="openWindow('computerWindow'); playSound('soundClick');">Компьютер</li>
-        <li style="cursor: pointer;" onclick="openWindow('calendarWindow'); playSound('soundClick');">Календарь</li>
-        <li style="cursor: pointer;" onclick="openWindow('reportWindow'); playSound('soundClick');">Отчёт</li>
-        <li style="cursor: pointer;" onclick="openWindow('reportHistoryWindow'); playSound('soundClick');">История отчётов</li>
-        <li style="cursor: pointer;" onclick="openWindow('terminalWindow'); playSound('soundClick');">Терминал</li>
-        <li style="cursor: pointer;" onclick="openWindow('osChangesWindow'); playSound('soundClick');">Изменения в ОС</li>
-        <li style="cursor: pointer;" onclick="openWindow('mediaPlayerWindow'); playSound('soundClick');">Spos Media Player</li>
-        <li style="cursor: pointer;" onclick="openWindow('electronicDiaryWindow'); playSound('soundClick');">Электронный дневник</li>
-        <li style="cursor: pointer;" onclick="openWindow('notepadWindow'); playSound('soundClick');">Блокнот</li>
-        <li style="cursor: pointer;" onclick="openWindow('settingsWindow'); playSound('soundClick');">Настройки</li>
-        <li style="cursor: pointer;" onclick="openWindow('explorerWindow'); playSound('soundClick');">Проводник</li>
+      <ul style="list-style:none; padding:0;">
+        <li style="cursor:pointer;" onclick="openWindow('computerWindow'); playSound('soundClick');">Компьютер</li>
+        <li style="cursor:pointer;" onclick="openWindow('calendarWindow'); playSound('soundClick');">Календарь</li>
+        <li style="cursor:pointer;" onclick="openWindow('reportWindow'); playSound('soundClick');">Service Reporting</li>
+        <li style="cursor:pointer;" onclick="openWindow('reportHistoryWindow'); playSound('soundClick');">History of reports</li>
+        <li style="cursor:pointer;" onclick="openWindow('terminalWindow'); playSound('soundClick');">Терминал</li>
+        <li style="cursor:pointer;" onclick="openWindow('osChangesWindow'); playSound('soundClick');">Изменения в ОС</li>
+        <li style="cursor:pointer;" onclick="openWindow('mediaPlayerWindow'); playSound('soundClick');">Spos Media Player</li>
+        <li style="cursor:pointer;" onclick="openWindow('calculatorWindow'); playSound('soundClick');">Калькулятор</li>
+        <li style="cursor:pointer;" onclick="openWindow('updateWindow'); playSound('soundClick');">Обновление</li>
+        <li style="cursor:pointer;" onclick="openWindow('paintWindow'); playSound('soundClick');">Paint</li>
+        <li style="cursor:pointer;" onclick="openWindow('antivirusWindow'); playSound('soundClick');">Spos Antivirus</li>
+        <li style="cursor:pointer;" onclick="openWindow('notepadWindow'); playSound('soundClick');">Блокнот</li>
+        <li style="cursor:pointer;" onclick="openWindow('settingsWindow'); playSound('soundClick');">Настройки</li>
+        <li style="cursor:pointer;" onclick="openWindow('explorerWindow'); playSound('soundClick');">Проводник</li>
+        <li style="cursor:pointer;" onclick="openWindow('accountWindow'); playSound('soundClick');">Учётная запись</li>
       </ul>
     </div>
   </div>
@@ -397,107 +559,123 @@
     <span class="taskbar-button" onclick="openWindow('notepadWindow'); playSound('soundClick');">Блокнот</span>
     <span class="taskbar-button" onclick="openWindow('settingsWindow'); playSound('soundClick');">Настройки</span>
     <span class="taskbar-button" onclick="openWindow('explorerWindow'); playSound('soundClick');">Проводник</span>
+    <span class="taskbar-button" onclick="openWindow('accountWindow'); playSound('soundClick');">Учётная запись</span>
     <div id="taskbarClock"></div>
   </div>
+  <!-- Аудио элементы -->
+  <audio id="soundStart" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+  <audio id="soundClick" src="https://www.soundjay.com/button/sounds/button-16.mp3" preload="auto"></audio>
+  <audio id="soundTerminal" src="https://www.soundjay.com/button/sounds/beep-02.mp3" preload="auto"></audio>
 
   <script>
-    // Функция воспроизведения звука
+    // Вход в систему
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      var username = document.getElementById("loginUsername").value.trim();
+      if (!username) username = "user";
+      localStorage.setItem("osUsername", username);
+      document.getElementById("compUsername").innerText = username;
+      document.getElementById("accountUserInfo").innerHTML = "Имя пользователя: " + username + "<br>Электронная почта: " + username.toLowerCase() + "0000000@gmail.com";
+      document.getElementById("loginScreen").style.display = "none";
+      document.getElementById("desktopContainer").style.display = "flex";
+      playSound("soundStart");
+    });
+
+    // Функция воспроизведения звука (с учётом настроек)
     function playSound(soundId) {
+      var settings = localStorage.getItem("osSettings") ? JSON.parse(localStorage.getItem("osSettings")) : { sound: "on" };
+      if (settings.sound === "off") return;
       var audio = document.getElementById(soundId);
-      if (audio) {
-        audio.play();
-      }
+      if (audio) audio.play();
     }
 
-    // Функции открытия и закрытия окон
+    // Открытие и закрытие окон
     function openWindow(id) {
-      document.getElementById(id).style.display = 'block';
-      if (id === 'reportHistoryWindow') {
-        loadReportHistory();
-      }
-      if (id === 'notepadWindow') {
-        loadNotepad();
-      }
-      if (id === 'settingsWindow') {
-        loadSettings();
-      }
+      document.getElementById(id).style.display = "block";
+      if (id === "reportHistoryWindow") loadReportHistory();
+      if (id === "notepadWindow") loadNotepad();
+      if (id === "settingsWindow") loadSettings();
     }
     function closeWindow(id) {
-      document.getElementById(id).style.display = 'none';
+      document.getElementById(id).style.display = "none";
     }
 
     // Обновление часов в панели задач
     function updateClock() {
-      var now = new Date();
-      document.getElementById('taskbarClock').textContent = now.toLocaleTimeString();
+      document.getElementById("taskbarClock").textContent = new Date().toLocaleTimeString();
     }
     setInterval(updateClock, 1000);
     updateClock();
-	// Обработка формы "Календарь"
-    document.getElementById('calendarForm').addEventListener('submit', function(e) {
+
+    // Обработка формы Календаря
+    document.getElementById("calendarForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      var date = document.getElementById('selectedDate').value;
-      document.getElementById('calendarResult').textContent = 'Вы выбрали дату: ' + date;
-      localStorage.setItem('selectedDate', date);
+      var date = document.getElementById("selectedDate").value;
+      document.getElementById("calendarResult").textContent = "Вы выбрали дату: " + date;
+      localStorage.setItem("selectedDate", date);
     });
 
-    // Обработка формы "Отчёт"
-    document.getElementById('reportForm').addEventListener('submit', function(e) {
+    // Обработка формы Service Reporting
+    document.getElementById("reportForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      var workTime = document.getElementById('workTime').value;
-      var codingTime = document.getElementById('codingTime').value;
-      var weather = document.getElementById('weather').value;
-      var poweredBy = document.getElementById('poweredBy').value;
-      var now = new Date();
-      var dateStr = now.toLocaleDateString();
-      var report = { workTime: workTime, codingTime: codingTime, weather: weather, poweredBy: poweredBy, date: dateStr };
-      var reportHistory = JSON.parse(localStorage.getItem('reportHistory')) || [];
+      var airTemperature = document.getElementById("airTemperature").value;
+      var workHours = document.getElementById("workHours").value;
+      var programmingHours = document.getElementById("programmingHours").value;
+      var weather = document.getElementById("weather").value;
+      var reportBy = document.getElementById("reportBy").value;
+      var dateStr = new Date().toLocaleDateString();
+      var report = {
+        airTemperature: airTemperature,
+        workHours: workHours,
+        programmingHours: programmingHours,
+        weather: weather,
+        reportBy: reportBy,
+        date: dateStr
+      };
+      var reportHistory = JSON.parse(localStorage.getItem("reportHistory") || "[]");
       reportHistory.push(report);
-      localStorage.setItem('reportHistory', JSON.stringify(reportHistory));
-      document.getElementById('reportContent').innerHTML = '<h3>Отчёт отправлен!</h3><p>' + dateStr + '</p>';
+      localStorage.setItem("reportHistory", JSON.stringify(reportHistory));
+      document.getElementById("reportContent").innerHTML = "<h3>Отчёт отправлен!</h3><p>" + dateStr + "</p>";
     });
 
-    // Загрузка истории отчётов
+    // Загрузка истории отчётов (History of reports)
     function loadReportHistory() {
-      var historyDiv = document.getElementById('reportHistoryContent');
-      var reportHistory = JSON.parse(localStorage.getItem('reportHistory')) || [];
-      if(reportHistory.length === 0) {
-        historyDiv.innerHTML = '<p>Нет отчётов</p>';
-      } else {
-        var html = '<ul>';
-        reportHistory.forEach(function(report, index) {
-          html += '<li><strong>Отчёт ' + (index+1) + '</strong>: ' +
-                  'Время работы: ' + report.workTime + ', ' +
-                  'Программирование: ' + report.codingTime + ', ' +
-                  'Погода: ' + report.weather + ', ' +
-                  'Powered by: ' + report.poweredBy + ' (' + report.date + ')</li>';
-        });
-        html += '</ul>';
-        historyDiv.innerHTML = html;
-      }
+      var reportHistory = JSON.parse(localStorage.getItem("reportHistory") || "[]");
+      var html = reportHistory.length ? "<ul>" : "Нет отчётов";
+      reportHistory.forEach(function(report, index) {
+        html += "<li><strong>Отчёт " + (index + 1) + "</strong>: " +
+		"Температура воздуха: " + report.airTemperature + " °C, " +
+          "Часы работы: " + report.workHours + ", " +
+          "Часы программирования: " + report.programmingHours + ", " +
+          "Погода: " + report.weather + ", " +
+          "Reporting by: " + report.reportBy + " (" + report.date + ")</li>";
+      });
+      if (reportHistory.length) html += "</ul>";
+      document.getElementById("reportHistoryContent").innerHTML = html;
     }
 
-    // Обработка команд терминала
+    // Терминал
     function handleTerminalCommand() {
-      var input = document.getElementById('terminalInput');
+      var input = document.getElementById("terminalInput");
       var command = input.value.trim();
-      var output = document.getElementById('terminalOutput');
+      var output = document.getElementById("terminalOutput");
+      var username = localStorage.getItem("osUsername") || "user";
       var response = "";
-      if(command === "/hello spos") {
-        response = "hello user";
-      } else if(command === "/goodbye spos") {
-        response = "goodbye user";
-      } else if(command === "/time") {
+      if (command === "/hello spos") {
+        response = "hello " + username;
+      } else if (command === "/goodbye spos") {
+        response = "goodbye " + username;
+      } else if (command === "/time") {
         response = new Date().toLocaleTimeString();
-      } else if(command === "/clearstory") {
+      } else if (command === "/clearstory") {
         output.innerHTML = "";
         input.value = "";
         return;
-      } else if(command === "/exit") {
-        closeWindow('terminalWindow');
+      } else if (command === "/exit") {
+        closeWindow("terminalWindow");
         input.value = "";
         return;
-      } else if(command === "/help") {
+      } else if (command === "/help") {
         response = "Доступные команды: /hello spos, /goodbye spos, /time, /clearstory, /exit, /help";
       } else {
         response = "error: unknown command";
@@ -505,86 +683,142 @@
       output.innerHTML += "<div>" + response + "</div>";
       input.value = "";
       output.scrollTop = output.scrollHeight;
-      playSound('soundTerminal');
+      playSound("soundTerminal");
     }
 
-    // Блокнот: сохранение и загрузка содержимого
+    // Блокнот
     function saveNotepad() {
-      var content = document.getElementById('notepadContent').value;
-      localStorage.setItem('notepadContent', content);
-      alert('Сохранено!');
+      var content = document.getElementById("notepadContent").value;
+      localStorage.setItem("notepadContent", content);
+      alert("Сохранено!");
     }
     function loadNotepad() {
-      var content = localStorage.getItem('notepadContent') || "";
-      document.getElementById('notepadContent').value = content;
+      document.getElementById("notepadContent").value = localStorage.getItem("notepadContent") || "";
     }
 
-    // Настройки: сохранение и загрузка
+    // Настройки
     function saveSettings() {
-      var soundSetting = document.getElementById('soundSetting').value;
-      var themeSetting = document.getElementById('themeSetting').value;
-	  var layoutSetting = document.getElementById('layoutSetting').value;
+      var soundSetting = document.getElementById("soundSetting").value;
+      var themeSetting = document.getElementById("themeSetting").value;
+      var layoutSetting = document.getElementById("layoutSetting").value;
       var settings = { sound: soundSetting, theme: themeSetting, layout: layoutSetting };
-      localStorage.setItem('osSettings', JSON.stringify(settings));
+      localStorage.setItem("osSettings", JSON.stringify(settings));
       applyTheme(themeSetting);
+      updateLanguage(layoutSetting);
       alert("Настройки сохранены!");
     }
     function loadSettings() {
-      var settings = localStorage.getItem('osSettings');
-      if(settings) {
+      var settings = localStorage.getItem("osSettings");
+      if (settings) {
         settings = JSON.parse(settings);
-        document.getElementById('soundSetting').value = settings.sound;
-        document.getElementById('themeSetting').value = settings.theme;
-        document.getElementById('layoutSetting').value = settings.layout;
+        document.getElementById("soundSetting").value = settings.sound;
+        document.getElementById("themeSetting").value = settings.theme;
+        document.getElementById("layoutSetting").value = settings.layout;
         applyTheme(settings.theme);
+        updateLanguage(settings.layout);
       }
     }
     function applyTheme(theme) {
-      if(theme === "white") {
+      if (theme === "white") {
         document.body.style.backgroundColor = "#fff";
         document.body.style.color = "#000";
+        // Белая тема использует альтернативные обои (не космические)
+        document.body.style.backgroundImage = "url('https://cdn.pixabay.com/photo/2015/09/18/17/31/blue-951042_1280.jpg')";
       } else {
         document.body.style.backgroundColor = "";
         document.body.style.color = "";
+        // Черная тема: космические обои по заданному URL
+        document.body.style.backgroundImage = "url('https://image.fonwall.ru/o/tj/andromeda-digital-universe-galaxy-cartoons.jpeg?auto=compress&fit=crop&w=1366&h=768&domain=img1.fonwall.ru')";
+      }
+    }
+    function updateLanguage(lang) {
+      var username = localStorage.getItem("osUsername") || "user";
+	  if (lang === "en") {
+        document.getElementById("accountUserInfo").innerHTML = "Username: " + username + "<br>Email: " + username.toLowerCase() + "0000000@gmail.com";
+      } else {
+        document.getElementById("accountUserInfo").innerHTML = "Имя пользователя: " + username + "<br>Электронная почта: " + username + "0000000@gmail.com";
       }
     }
 
-    // Проводник: открытие системной папки system32
+    // Проводник
     function openSystem32() {
-      document.getElementById('explorerContent').innerHTML = "<p>Operating system SpacyOS</p>";
+      document.getElementById("explorerContent").innerHTML = "<p>Operating system SpacyOS</p>";
     }
 
-    // Электронный дневник: обработка формы
-    document.getElementById('diaryForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      var vanya = document.getElementById('vanya').value;
-      var polina = document.getElementById('polina').value;
-      var result = "<p>Ваня - " + vanya + "</p><p>Полина - " + polina + "</p>";
-      document.getElementById('diaryResult').innerHTML = result;
-    });
+    // Калькулятор
+    function calculatorButtonClick(val) {
+      document.getElementById("calcDisplay").value += val;
+    }
+    function calculateResult() {
+      try {
+        var result = eval(document.getElementById("calcDisplay").value);
+        document.getElementById("calcDisplay").value = result;
+      } catch (e) {
+        document.getElementById("calcDisplay").value = "Ошибка";
+      }
+    }
+    function clearCalculator() {
+      document.getElementById("calcDisplay").value = "";
+    }
 
-    // Реализация перетаскивания окон
+    // Обновление
+    function checkUpdates() {
+      document.getElementById("updateResult").innerText = "Обновления не найдены.";
+    }
+    function updateComputer() {
+      document.getElementById("updateResult").innerText = "Компьютер обновлён до последней версии.";
+    }
+
+    // Paint
+    var paintCanvas = document.getElementById("paintCanvas");
+    var ctx = paintCanvas ? paintCanvas.getContext("2d") : null;
+    var isDrawing = false;
+    if (paintCanvas) {
+      paintCanvas.addEventListener("mousedown", function(e) {
+        isDrawing = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX, e.offsetY);
+      });
+      paintCanvas.addEventListener("mousemove", function(e) {
+        if (isDrawing) {
+          ctx.lineTo(e.offsetX, e.offsetY);
+          ctx.stroke();
+        }
+      });
+      paintCanvas.addEventListener("mouseup", function() { isDrawing = false; });
+      paintCanvas.addEventListener("mouseout", function() { isDrawing = false; });
+    }
+    function clearCanvas() {
+      if (ctx && paintCanvas) ctx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+    }
+
+    // Spos Antivirus
+    function startAntivirusCheck() {
+      document.getElementById("antivirusResult").innerText = "Проверка...";
+      setTimeout(function() {
+        document.getElementById("antivirusResult").innerText = "Проверка завершена! Вирусов не обнаружено";
+      }, 2000);
+    }
+	// Перетаскивание окон
     document.querySelectorAll('.window').forEach(function(win) {
       var header = win.querySelector('.window-header');
-      header.onmousedown = function(event) {
-        var shiftX = event.clientX - win.getBoundingClientRect().left;
-        var shiftY = event.clientY - win.getBoundingClientRect().top;
+      header.onmousedown = function(e) {
+        var shiftX = e.clientX - win.getBoundingClientRect().left;
+        var shiftY = e.clientY - win.getBoundingClientRect().top;
         function moveAt(pageX, pageY) {
-          win.style.left = pageX - shiftX + 'px';
-          win.style.top = pageY - shiftY + 'px';
+          win.style.left = pageX - shiftX + "px";
+          win.style.top = pageY - shiftY + "px";
         }
-        function onMouseMove(event) {
-          moveAt(event.pageX, event.pageY);
+        function onMouseMove(e) {
+          moveAt(e.pageX, e.pageY);
         }
-        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener("mousemove", onMouseMove);
         document.onmouseup = function() {
-          document.removeEventListener('mousemove', onMouseMove);
+          document.removeEventListener("mousemove", onMouseMove);
           document.onmouseup = null;
         };
       };
-      header.ondragstart = function() {
-        return false;
-      };
+      header.ondragstart = function() { return false; };
     });
   </script>
 </body>
