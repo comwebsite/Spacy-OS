@@ -59,12 +59,11 @@
       height: 100%;
       background: #222;
       color: #fff;
-      display: flex;
+      display: none; /* изначально скрыт */
       flex-direction: column;
       justify-content: center;
       align-items: center;
       z-index: 900;
-      display: none;
     }
     #login-screen h2 {
       font-size: 36px;
@@ -96,19 +95,19 @@
       display: none;
       position: relative;
     }
-    /* Колонки для программ */
+    /* Колонки с ярлыками программ */
     .program-columns {
       position: absolute;
       top: 20px;
       left: 20px;
       display: flex;
-      gap: 10px; /* Расстояние между столбиками 10px */
+      gap: 10px;
     }
     .program-column {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       padding: 10px;
       border-radius: 8px;
     }
@@ -153,7 +152,7 @@
     .taskbar-item {
       margin-right: 10px;
       padding: 5px 10px;
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.2);
       border-radius: 4px;
       color: #fff;
       cursor: pointer;
@@ -195,7 +194,7 @@
   </style>
 </head>
 <body>
-  <!-- Заставка -->
+  <!-- Заставочный экран (Splash Screen) -->
   <div id="splash-screen">
     <h1>Welcome!<br>FermionOS</h1>
     <div class="spinner"></div>
@@ -204,8 +203,8 @@
   <!-- Экран входа -->
   <div id="login-screen">
     <h2>Вход в систему</h2>
-    <input type="text" id="username" placeholder="Имя пользователя" class="login-input">
-    <input type="password" id="password" placeholder="Пароль" class="login-input">
+    <input id="username" class="login-input" type="text" placeholder="Username">
+    <input id="password" class="login-input" type="password" placeholder="Password">
     <button id="login-btn" class="login-button">Войти</button>
   </div>
 
@@ -213,6 +212,7 @@
   <div id="desktop">
     <!-- Колонки с ярлыками программ -->
     <div class="program-columns">
+      <!-- Первый столбик -->
       <div class="program-column" id="column1">
         <!-- Программа Компьютер -->
         <div class="program-icon" id="app-computer">
@@ -244,7 +244,18 @@
           <img src="https://img.icons8.com/color/48/000000/virus.png" alt="Quantum Antivirus">
           <span>Quantum Antivirus</span>
         </div>
+        <!-- Программа Writer -->
+        <div class="program-icon" id="app-writer">
+          <img src="https://img.icons8.com/color/48/000000/edit-file.png" alt="Writer">
+          <span>Writer</span>
+        </div>
+        <!-- Программа Writer Files -->
+        <div class="program-icon" id="app-writerfiles">
+          <img src="https://img.icons8.com/color/48/000000/file.png" alt="Writer Files">
+          <span>Writer Files</span>
+        </div>
       </div>
+      <!-- Второй столбик -->
       <div class="program-column" id="column2">
         <!-- Программа Service Reporting -->
         <div class="program-icon" id="app-servicereporting">
@@ -276,20 +287,40 @@
           <img src="https://img.icons8.com/color/48/000000/paint-palette.png" alt="Paint">
           <span>Paint</span>
         </div>
+        <!-- Программа Крестики нолики -->
+        <div class="program-icon" id="app-tictactoe">
+          <img src="https://img.icons8.com/color/48/000000/tic-tac-toe.png" alt="Крестики нолики">
+          <span>Крестики нолики</span>
+        </div>
+        <!-- Программа Змейка -->
+        <div class="program-icon" id="app-snake">
+          <img src="https://img.icons8.com/color/48/000000/snake.png" alt="Змейка">
+          <span>Змейка</span>
+        </div>
       </div>
     </div>
     <!-- Панель задач -->
     <div id="taskbar">
-      <div class="taskbar-item" id="start-menu">Пуск</div>
-      <div class="taskbar-item" id="explorer">Проводник</div>
-      <div class="taskbar-item" id="settings">Настройки</div>
-      <div class="taskbar-item" id="terminal">Терминал</div>
-      <div class="taskbar-item" id="account">Учетная запись</div>
+      <div class="taskbar-item" id="start-menu" title="Пуск" style="cursor: pointer;">
+        <img src="https://img.icons8.com/color/48/000000/windows-10.png" alt="Пуск" style="width:20px;">
+      </div>
+      <div class="taskbar-item" id="explorer" title="Проводник" style="cursor: pointer;">
+        <img src="https://img.icons8.com/color/48/000000/folder-invoices.png" alt="Проводник" style="width:20px;">
+      </div>
+      <div class="taskbar-item" id="settings" title="Настройки" style="cursor: pointer;">
+        <img src="https://img.icons8.com/color/48/000000/settings.png" alt="Настройки" style="width:20px;">
+      </div>
+      <div class="taskbar-item" id="terminal" title="Терминал" style="cursor: pointer;">
+        <img src="https://img.icons8.com/color/48/000000/console.png" alt="Терминал" style="width:20px;">
+      </div>
+      <div class="taskbar-item" id="account" title="Учетная запись" style="cursor: pointer;">
+        <img src="https://img.icons8.com/color/48/000000/user.png" alt="Учетная запись" style="width:20px;">
+      </div>
     </div>
   </div>
 
   <script>
-    /* Переход от заставки к экрану входа через 3 секунды */
+    // После загрузки страницы (событие load гарантирует, что все ресурсы загружены)
     window.addEventListener('load', function() {
       setTimeout(function() {
         document.getElementById('splash-screen').style.display = 'none';
@@ -297,21 +328,25 @@
       }, 3000);
     });
 
-    /* Функция входа: проверка полей, проигрывание звука и переход к рабочему столу */
+    // Обработчик кнопки "Войти"
     document.getElementById('login-btn').addEventListener('click', function() {
       var username = document.getElementById('username').value.trim();
       var password = document.getElementById('password').value.trim();
-      if(username === '' || password === '') {
+      if (username === '' || password === '') {
         alert('Пожалуйста, заполните все поля');
         return;
       }
-      // Проигрывание звука приветствия (пример: можно заменить на нужный URL)
-      var greetingSound = new Audio('https://www.orangefreesounds.com/wp-content/uploads/2014/09/Windows-95-startup-sound.mp3');
-      greetingSound.play();
-      // Переключение на рабочий стол
+      enterDesktop();
+    });
+
+    // Функция перехода на рабочий стол
+    function enterDesktop() {
       document.getElementById('login-screen').style.display = 'none';
       document.getElementById('desktop').style.display = 'block';
-    });
+      // Проигрывание звука приветствия
+      var greetingSound = new Audio('https://www.orangefreesounds.com/wp-content/uploads/2014/09/Windows-95-startup-sound.mp3');
+      greetingSound.play();
+    }
 
     /* Функционал перетаскивания окон */
     function makeDraggable(el) {
@@ -436,88 +471,148 @@
     });
 
     /* Обработчик для Программы "Калькулятор" */
-    document.getElementById('app-calculator').addEventListener('click', function() {
-      var calculatorContent = 
-        '<div id="calc-container">' +
-          '<input type="text" id="calc-display" disabled style="width: 100%; font-size: 24px; margin-bottom: 10px; text-align: right;"/>' +
-          '<div id="calc-buttons">' +
-            '<button data-value="7">7</button>' +
-            '<button data-value="8">8</button>' +
-            '<button data-value="9">9</button>' +
-            '<button data-value="/">/</button>' +
-            '<br>' +
-            '<button data-value="4">4</button>' +
-            '<button data-value="5">5</button>' +
-            '<button data-value="6">6</button>' +
-            '<button data-value="*">*</button>' +
-            '<br>' +
-            '<button data-value="1">1</button>' +
-            '<button data-value="2">2</button>' +
-            '<button data-value="3">3</button>' +
-            '<button data-value="-">-</button>' +
-            '<br>' +
-            '<button data-value="0">0</button>' +
-            '<button data-value=".">.</button>' +
-            '<button id="calc-clear">C</button>' +
-            '<button data-value="+">+</button>' +
-            '<br>' +
-            '<button id="calc-equal" style="width: 100%;">=</button>' +
-          '</div>' +
-        '</div>';
-      var win = createWindow('win-calculator', 'Калькулятор', calculatorContent);
-      
-      setTimeout(function(){
-        var display = win.querySelector('#calc-display');
-        win.querySelectorAll('#calc-buttons button').forEach(function(btn){
-          btn.addEventListener('click', function(){
-            var value = btn.getAttribute('data-value');
-            if (value) {
-              display.value += value;
-            }
-          });
-        });
-        win.querySelector('#calc-clear').addEventListener('click', function(){
-          display.value = "";
-        });
-        win.querySelector('#calc-equal').addEventListener('click', function(){
-          try {
-            display.value = eval(display.value);
-          } catch(e) {
-            display.value = "Ошибка";
+document.getElementById('app-calculator').addEventListener('click', function() {
+  var calculatorContent = 
+    '<div id="calc-container" style="max-width:300px; margin:10px auto;">' +
+      '<input type="text" id="calc-display" disabled style="width:100%; font-size:24px; margin-bottom:10px; text-align:right; padding:8px;" placeholder="0" />' +
+      '<div id="calc-buttons" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">' +
+        '<button data-value="7" style="padding:10px; font-size:18px;">7</button>' +
+        '<button data-value="8" style="padding:10px; font-size:18px;">8</button>' +
+        '<button data-value="9" style="padding:10px; font-size:18px;">9</button>' +
+        '<button data-value="/" style="padding:10px; font-size:18px;">/</button>' +
+        '<button data-value="4" style="padding:10px; font-size:18px;">4</button>' +
+        '<button data-value="5" style="padding:10px; font-size:18px;">5</button>' +
+        '<button data-value="6" style="padding:10px; font-size:18px;">6</button>' +
+        '<button data-value="*" style="padding:10px; font-size:18px;">*</button>' +
+        '<button data-value="1" style="padding:10px; font-size:18px;">1</button>' +
+        '<button data-value="2" style="padding:10px; font-size:18px;">2</button>' +
+        '<button data-value="3" style="padding:10px; font-size:18px;">3</button>' +
+        '<button data-value="-" style="padding:10px; font-size:18px;">-</button>' +
+        '<button data-value="0" style="padding:10px; font-size:18px;">0</button>' +
+        '<button data-value="." style="padding:10px; font-size:18px;">.</button>' +
+        '<button id="calc-clear" style="padding:10px; font-size:18px;">C</button>' +
+        '<button data-value="+" style="padding:10px; font-size:18px;">+</button>' +
+        '<button id="calc-equal" style="grid-column: span 4; padding:10px; font-size:18px;">=</button>' +
+      '</div>' +
+    '</div>';
+  
+  var win = createWindow('win-calculator', 'Калькулятор', calculatorContent);
+  
+  // Даем время окну созданного приложения и кнопкам для корректного поиска элементов
+  setTimeout(function(){
+    const display = win.querySelector('#calc-display');
+    // Инициализируем дисплей значением "0"
+    display.value = "0";
+    
+    // Добавляем обработчик для всех кнопок с data-value
+    win.querySelectorAll('#calc-buttons button').forEach(function(btn){
+      var value = btn.getAttribute('data-value');
+      if(value) {
+        btn.addEventListener('click', function(){
+          // Если на дисплее "0", заменяем его
+          if(display.value === "0") {
+            display.value = value;
+          } else {
+            display.value += value;
           }
         });
-      }, 100);
+      }
     });
+    // Обработчик кнопки "C" для сброса
+    win.querySelector('#calc-clear').addEventListener('click', function(){
+      display.value = "0";
+    });
+    // Обработчик кнопки "="
+    win.querySelector('#calc-equal').addEventListener('click', function(){
+      try {
+        let result = eval(display.value);
+        display.value = result;
+      } catch(e) {
+        display.value = "Ошибка";
+      }
+    });
+  }, 100);
+});
 
-    /* Обработчик для Программы "Quantum Antivirus" */
-    document.getElementById('app-antivirus').addEventListener('click', function() {
-      var antivirusContent =
-        '<p>Quantum Antivirus — ваш абсолютный защитник киберпространства!</p>' +
-        '<p>Добро пожаловать в мир передовой защиты! Quantum Antivirus — это не просто антивирус, а революционная система безопасности, работающая на квантовом уровне.</p>' +
-        '<p>Тип проверки:</p>' +
-        '<label><input type="checkbox" name="scanType" value="Быстрая проверка"> Быстрая проверка</label><br>' +
-        '<label><input type="checkbox" name="scanType" value="Выборочная проверка"> Выборочная проверка</label><br>' +
-        '<label><input type="checkbox" name="scanType" value="Полная проверка"> Полная проверка</label><br>' +
-        '<label><input type="checkbox" name="scanType" value="Полная проверка premium plus"> Полная проверка premium plus</label><br>' +
-        '<button id="start-scan">Проверить компьютер</button>' +
-        '<div id="scan-result" style="margin-top:10px;"></div>';
-      var win = createWindow('win-antivirus', 'Quantum Antivirus', antivirusContent);
-      
+
+   /* Обработчик для Программы "Quantum Antivirus" */
+document.getElementById('app-antivirus').addEventListener('click', function() {
+  var antivirusContent =
+    '<p>Quantum Antivirus — ваш абсолютный защитник киберпространства!</p>' +
+    '<p>Добро пожаловать в мир передовой защиты! Quantum Antivirus — это не просто антивирус, а революционная система безопасности, работающая на квантовом уровне.</p>' +
+    '<p>Тип проверки:</p>' +
+    '<label><input type="radio" name="scanType" value="Быстрая проверка"> Быстрая проверка</label><br>' +
+    '<label><input type="radio" name="scanType" value="Выборочная проверка"> Выборочная проверка</label><br>' +
+    '<label><input type="radio" name="scanType" value="Полная проверка"> Полная проверка</label><br>' +
+    '<label><input type="radio" name="scanType" value="Полная проверка premium plus"> Полная проверка premium plus</label><br>' +
+    '<button id="start-scan">Проверить компьютер</button>' +
+    '<div id="scan-result" style="margin-top:10px;"></div>';
+    
+  var win = createWindow('win-antivirus', 'Quantum Antivirus', antivirusContent);
+  
+  setTimeout(function(){
+    win.querySelector('#start-scan').addEventListener('click', function(){
+      var selectedOption = win.querySelector('input[name="scanType"]:checked');
+      if (!selectedOption) {
+        alert('Пожалуйста, выберите тип проверки');
+        return;
+      }
+      var resultDiv = win.querySelector('#scan-result');
+      resultDiv.innerHTML = "Идет проверка.......";
       setTimeout(function(){
-        win.querySelector('#start-scan').addEventListener('click', function(){
-          var checkboxes = win.querySelectorAll('input[name="scanType"]:checked');
-          if (checkboxes.length === 0) {
-            alert('Пожалуйста, выберите тип проверки');
-            return;
-          }
-          var resultDiv = win.querySelector('#scan-result');
-          resultDiv.innerHTML = "Идет проверка.......";
-          setTimeout(function(){
-            resultDiv.innerHTML = "Проверка завершена! Вирусов на вашем компьютере не обнаружено.";
-          }, 10000);
-        });
-      }, 100);
+        resultDiv.innerHTML = "Проверка завершена! Вирусов на вашем компьютере не обнаружено.";
+      }, 10000);
     });
+  }, 100);
+});
+	  
+	  /* Обработчик для программы "Writer" */
+document.getElementById('app-writer').addEventListener('click', function() {
+  // Интерфейс редактора с текстовым полем и кнопкой "Сохранить файл"
+  var writerContent =
+    '<textarea id="writer-text" style="width:100%; height:200px; resize: none;"></textarea><br>' +
+    '<button id="save-writer-file">Сохранить файл</button>';
+  // Создаем окно для Writer
+  var win = createWindow('win-writer', 'Writer', writerContent);
+  
+  // Обработчик для кнопки сохранения
+  setTimeout(function(){
+    win.querySelector('#save-writer-file').addEventListener('click', function(){
+      var content = win.querySelector('#writer-text').value;
+      if(content.trim() === ""){
+        alert("Нельзя сохранить пустой файл");
+        return;
+      }
+      // Получаем уже сохранённые файлы (если есть) или создаем пустой массив
+      var files = JSON.parse(localStorage.getItem('writerFiles') || '[]');
+      files.push({content: content, timestamp: new Date().toLocaleString()});
+      localStorage.setItem('writerFiles', JSON.stringify(files));
+      alert("Файл сохранен");
+      // Не обязательно, но можно очистить текстовое поле после сохранения
+      win.querySelector('#writer-text').value = "";
+    });
+  }, 100);
+});
+
+/* Обработчик для программы "Writer Files" */
+document.getElementById('app-writerfiles').addEventListener('click', function() {
+  // Получаем сохраненные файлы из LocalStorage
+  var files = JSON.parse(localStorage.getItem('writerFiles') || '[]');
+  var filesContent = "<h3>Сохраненные файлы Writer:</h3>";
+  
+  if(files.length === 0){
+    filesContent += "<p>Нет сохраненных файлов.</p>";
+  } else {
+    files.forEach(function(file, index){
+      filesContent += "<p><strong>Файл " + (index+1) + ":</strong> <br>" +
+                      file.content.replace(/\n/g, "<br>") + "<br>" +
+                      "<small>" + file.timestamp + "</small></p><hr>";
+    });
+  }
+  // Создаем окно для вывода сохраненных файлов
+  createWindow('win-writerfiles', 'Writer Files', filesContent);
+});
+
 
     /* Обработчик для Программы "Service Reporting" */
     document.getElementById('app-servicereporting').addEventListener('click', function() {
@@ -666,233 +761,444 @@
       createWindow('win-mediaplayer', 'Media Player', mediaContent);
     });
 
-    /* Обработчик для Программы "Paint" */
-    document.getElementById('app-paint').addEventListener('click', function() {
-      var paintContent =
-        '<canvas id="paint-canvas" width="380" height="220" style="border:1px solid #000;"></canvas><br>' +
-        '<button id="clear-paint">Очистить</button>' +
-        '<br><span>Выберите цвет: </span>' +
-        '<button data-color="red" style="background:red; width:20px; height:20px; border:none;"></button>' +
-        '<button data-color="black" style="background:black; width:20px; height:20px; border:none; margin-left:5px;"></button>';
-      var win = createWindow('win-paint', 'Paint', paintContent);
-      
-      setTimeout(function(){
-        var canvas = win.querySelector('#paint-canvas');
-        var ctx = canvas.getContext('2d');
-        var painting = false;
-        var currentColor = 'red';
-        
-        canvas.addEventListener('mousedown', function(e) {
-          painting = true;
-          ctx.beginPath();
-          ctx.moveTo(e.offsetX, e.offsetY);
-        });
-        canvas.addEventListener('mousemove', function(e) {
-          if (painting) {
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.strokeStyle = currentColor;
-            ctx.lineWidth = 2;
-            ctx.stroke();
-          }
-        });
-        canvas.addEventListener('mouseup', function() {
-          painting = false;
-        });
-        win.querySelector('#clear-paint').addEventListener('click', function(){
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-        });
-        win.querySelectorAll('button[data-color]').forEach(function(btn){
-          btn.addEventListener('click', function(){
-            currentColor = btn.getAttribute('data-color');
-          });
-        });
-      }, 100);
+  /* Обработчик для Программы "Paint" */
+document.getElementById('app-paint').addEventListener('click', function() {
+  var paintContent =
+    '<canvas id="paint-canvas" width="380" height="220" style="border:1px solid #000;"></canvas><br>' +
+    '<button id="clear-paint">Очистить</button>' +
+    '<br><span>Выберите цвет: </span>' +
+    // Ради кнопки с цветами: красный, черный, синий, желтый, голубой, фиолетовый, оранжевый
+    '<button data-color="red" style="background:red; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    '<button data-color="black" style="background:black; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    '<button data-color="blue" style="background:blue; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    '<button data-color="yellow" style="background:yellow; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    // Для "голубого" используется значение "cyan". Если нужно использовать другой оттенок, можно подставить "skyblue"
+    '<button data-color="cyan" style="background:cyan; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    '<button data-color="purple" style="background:purple; width:20px; height:20px; border:none; margin:2px;"></button>' +
+    '<button data-color="orange" style="background:orange; width:20px; height:20px; border:none; margin:2px;"></button>';
+    
+  var win = createWindow('win-paint', 'Paint', paintContent);
+  
+  setTimeout(function(){
+    var canvas = win.querySelector('#paint-canvas');
+    var ctx = canvas.getContext('2d');
+    var painting = false;
+    var currentColor = 'red';
+    
+    canvas.addEventListener('mousedown', function(e) {
+      painting = true;
+      ctx.beginPath();
+      ctx.moveTo(e.offsetX, e.offsetY);
     });
-
-    /* --- Обработчики для элементов панели задач --- */
-
-    /* Меню "Пуск" */
-    document.getElementById('start-menu').addEventListener('click', function() {
-      var existingMenu = document.getElementById('start-menu-window');
-      if (existingMenu) {
-        existingMenu.remove();
-        return;
+    canvas.addEventListener('mousemove', function(e) {
+      if (painting) {
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.strokeStyle = currentColor;
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
-      var menuDiv = document.createElement('div');
-      menuDiv.id = 'start-menu-window';
-      menuDiv.style.position = 'absolute';
-      menuDiv.style.bottom = '50px';
-      menuDiv.style.left = '10px';
-      menuDiv.style.background = '#333';
-      menuDiv.style.padding = '10px';
-      menuDiv.style.border = '1px solid #555';
-      menuDiv.style.borderRadius = '4px';
-      var programs = [
-         { name: 'Компьютер', id: 'app-computer' },
-         { name: 'Модификация', id: 'app-modification' },
-         { name: 'Календарь', id: 'app-calendar' },
-         { name: 'Обновление', id: 'app-update' },
-         { name: 'Калькулятор', id: 'app-calculator' },
-         { name: 'Quantum Antivirus', id: 'app-antivirus' },
-         { name: 'Service Reporting', id: 'app-servicereporting' },
-         { name: 'История репортов', id: 'app-historyreports' },
-         { name: 'Блокнот', id: 'app-notepad' },
-         { name: 'История записей', id: 'app-historynotes' },
-         { name: 'Media Player', id: 'app-mediaplayer' },
-         { name: 'Paint', id: 'app-paint' }
-      ];
-      programs.forEach(function(prog) {
-         var btn = document.createElement('div');
-         btn.textContent = prog.name;
-         btn.style.cursor = 'pointer';
-         btn.style.padding = '5px';
-         btn.style.color = '#fff';
-         btn.addEventListener('click', function(){
-           document.getElementById(prog.id).click();
-           menuDiv.remove();
-         });
-         menuDiv.appendChild(btn);
+    });
+    canvas.addEventListener('mouseup', function() {
+      painting = false;
+    });
+    win.querySelector('#clear-paint').addEventListener('click', function(){
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    });
+    win.querySelectorAll('button[data-color]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        currentColor = btn.getAttribute('data-color');
       });
-      document.getElementById('desktop').appendChild(menuDiv);
+    });
+  }, 100);
+});
+	  document.getElementById('app-tictactoe').addEventListener('click', function() {
+  let gameHTML = `
+    <div id="ticTacToe">
+      <h3 id="tt-status">Ход: X</h3>
+      <table id="tt-board" style="border-collapse: collapse; margin: 0 auto;">
+         <tr>
+           <td data-index="0" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="1" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="2" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+         </tr>
+         <tr>
+           <td data-index="3" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="4" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="5" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+         </tr>
+         <tr>
+           <td data-index="6" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="7" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+           <td data-index="8" style="width:60px; height:60px; border:1px solid #000; text-align:center; font-size:36px; cursor:pointer;"></td>
+         </tr>
+      </table>
+      <button id="tt-restart" style="display: block; margin:10px auto;">Начать заново</button>
+    </div>`;
+    
+  let win = createWindow('win-tictactoe', 'Крестики нолики', gameHTML);
+  
+  setTimeout(function(){
+    const board = win.querySelectorAll('#tt-board td');
+    const status = win.querySelector('#tt-status');
+    let currentPlayer = 'X';
+    let gameActive = true;
+    let boardValues = Array(9).fill('');
+
+    function checkWinner() {
+      const winConditions = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      for (let condition of winConditions) {
+        const [a, b, c] = condition;
+        if (boardValues[a] && boardValues[a] === boardValues[b] && boardValues[b] === boardValues[c]) {
+          return boardValues[a];
+        }
+      }
+      return null;
+    }
+
+    board.forEach(function(cell) {
+      cell.addEventListener('click', function() {
+        let index = cell.getAttribute('data-index');
+        if (!gameActive || boardValues[index] !== '') return;
+        boardValues[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+        let winner = checkWinner();
+        if (winner) {
+          status.textContent = "Победитель: " + winner;
+          gameActive = false;
+        } else if (boardValues.every(v => v !== '')) {
+          status.textContent = "Ничья!";
+          gameActive = false;
+        } else {
+          currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+          status.textContent = "Ход: " + currentPlayer;
+        }
+      });
     });
 
-    /* Проводник */
-    document.getElementById('explorer').addEventListener('click', function() {
-      var explorerContent = '<button id="btn-fermos">C:\\FERMIONOS</button>';
-      var win = createWindow('win-explorer', 'Проводник', explorerContent);
-      setTimeout(function(){
-          win.querySelector('#btn-fermos').addEventListener('click', function(){
-             var subContent = '<button id="btn-fermit">fermion32</button>';
-             var win2 = createWindow('win-explorer-sub', 'Проводник', subContent);
-             setTimeout(function(){
-               win2.querySelector('#btn-fermit').addEventListener('click', function(){
-                 var finalContent = 
-                   '<p>Vertex Dynamics Corporation, 2025 Inc.</p>' +
-                   '<p>Динамика Вершины</p>' +
-                   '<p>Fermion OS</p>' +
-                   '<p>Все права защищены.</p>';
-                 createWindow('win-explorer-final', 'Проводник', finalContent);
-               });
-             }, 100);
-          });
-      }, 100);
+    win.querySelector('#tt-restart').addEventListener('click', function() {
+      boardValues = Array(9).fill('');
+      board.forEach(cell => cell.textContent = '');
+      currentPlayer = 'X';
+      status.textContent = "Ход: " + currentPlayer;
+      gameActive = true;
     });
+  }, 100);
+});
+document.getElementById('app-snake').addEventListener('click', function() {
+  let snakeHTML = `
+    <canvas id="snakeCanvas" width="400" height="400" style="background: green; display: block; margin: 0 auto;"></canvas>
+    <button id="snakeRestart" style="display: block; margin: 10px auto;">Начать заново</button>
+    <div id="snakeStatus" style="text-align: center; font-family: sans-serif;"></div>`;
+    
+  let win = createWindow('win-snake', 'Змейка', snakeHTML);
+  
+  setTimeout(function(){
+    const canvas = win.querySelector('#snakeCanvas');
+    const ctx = canvas.getContext('2d');
+    const gridSize = 20; // размер клетки
+    const tileCountX = canvas.width / gridSize;
+    const tileCountY = canvas.height / gridSize;
 
-    /* Настройки */
-    document.getElementById('settings').addEventListener('click', function() {
-      var settingsContent =
-        '<label>Звук: <select id="setting-sound"><option value="on">Вкл</option><option value="off">Выкл</option></select></label><br>' +
-        '<label>Уведомления: <select id="setting-notifications"><option value="on">Вкл</option><option value="off">Выкл</option></select></label><br>' +
-        '<label>Тема: <select id="setting-theme"><option value="white">Белая</option><option value="black">Черная</option></select></label><br>' +
-        '<label>Текущий язык: <select id="setting-language"><option value="ru">Русский</option><option value="en">Английский</option></select></label><br>' +
-        '<button id="save-settings">Сохранить настройки</button>' +
-        '<div id="settings-message" style="margin-top:10px;"></div>';
-      var win = createWindow('win-settings', 'Настройки', settingsContent);
-      
-      setTimeout(function(){
-         win.querySelector('#save-settings').addEventListener('click', function(){
-            var sound = win.querySelector('#setting-sound').value;
-            var notifications = win.querySelector('#setting-notifications').value;
-            var theme = win.querySelector('#setting-theme').value;
-            var language = win.querySelector('#setting-language').value;
-            if (theme === 'black'){
-              document.getElementById('desktop').style.filter = 'brightness(0.7)';
-            } else {
-              document.getElementById('desktop').style.filter = 'brightness(1)';
-            }
-            win.querySelector('#settings-message').innerHTML = "Настройки сохранены!";
-         });
-      }, 100);
+    let snake = [{x: 10, y: 10}];
+    let velocity = {x: 0, y: 0};
+    let apple = {x: Math.floor(Math.random() * tileCountX), y: Math.floor(Math.random() * tileCountY)};
+    let gameInterval;
+    let gameOver = false;
+
+    function gameLoop(){
+      // Перемещение змейки
+      const head = {x: snake[0].x + velocity.x, y: snake[0].y + velocity.y};
+
+      // Проверка столкновения со стенами
+      if(head.x < 0 || head.x >= tileCountX || head.y < 0 || head.y >= tileCountY){
+        return endGame();
+      }
+      // Проверка столкновения с самой собой
+      for(let segment of snake) {
+        if(head.x === segment.x && head.y === segment.y){
+          return endGame();
+        }
+      }
+      snake.unshift(head);
+
+      // Если съели яблоко
+      if(head.x === apple.x && head.y === apple.y){
+        apple = {x: Math.floor(Math.random() * tileCountX), y: Math.floor(Math.random() * tileCountY)};
+      } else {
+        snake.pop();
+      }
+      draw();
+    }
+
+    function draw(){
+      // Очистка и заливаем поле зелёным цветом
+      ctx.fillStyle = 'green';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Рисуем яблоко (красное)
+      ctx.fillStyle = 'red';
+      ctx.fillRect(apple.x * gridSize, apple.y * gridSize, gridSize, gridSize);
+
+      // Рисуем змейку (фиолетовая)
+      ctx.fillStyle = 'purple';
+      for(let segment of snake) {
+        ctx.fillRect(segment.x * gridSize, segment.y * gridSize, gridSize, gridSize);
+      }
+    }
+
+    function endGame(){
+      clearInterval(gameInterval);
+      gameOver = true;
+      win.querySelector('#snakeStatus').textContent = "Игра окончена!";
+    }
+
+    function keyDown(e){
+      if(gameOver) return;
+      switch(e.keyCode){
+        case 37: // влево
+          if(velocity.x !== 1) velocity = {x: -1, y: 0};
+          break;
+        case 38: // вверх
+          if(velocity.y !== 1) velocity = {x: 0, y: -1};
+          break;
+        case 39: // вправо
+          if(velocity.x !== -1) velocity = {x: 1, y: 0};
+          break;
+        case 40: // вниз
+          if(velocity.y !== -1) velocity = {x: 0, y: 1};
+          break;
+      }
+    }
+    
+    document.addEventListener('keydown', keyDown);
+
+    function startGame(){
+      snake = [{x: 10, y: 10}];
+      velocity = {x: 0, y: 0};
+      apple = {x: Math.floor(Math.random() * tileCountX), y: Math.floor(Math.random() * tileCountY)};
+      gameOver = false;
+      win.querySelector('#snakeStatus').textContent = "";
+      clearInterval(gameInterval);
+      gameInterval = setInterval(gameLoop, 100);
+    }
+
+    startGame();
+
+    win.querySelector('#snakeRestart').addEventListener('click', function(){
+      startGame();
     });
+  }, 100);
+});
 
-    /* Терминал */
-    document.getElementById('terminal').addEventListener('click', function() {
-      var terminalContent =
-        '<div id="terminal-output" style="height:200px; overflow:auto; background:#000; color:#0f0; padding:5px; font-family:monospace;"></div>' +
-        '<input type="text" id="terminal-input" style="width:100%; font-family:monospace; font-size:16px;" placeholder="Введите команду">';
-      var win = createWindow('win-terminal', 'Терминал', terminalContent);
-      
-      setTimeout(function(){
-         var outputDiv = win.querySelector('#terminal-output');
-         var input = win.querySelector('#terminal-input');
-      
-         function printOutput(text) {
-           outputDiv.innerHTML += text + "<br>";
-           outputDiv.scrollTop = outputDiv.scrollHeight;
+   /* --- Обработчики для элементов панели задач --- */
+
+/* Меню "Пуск" */
+document.getElementById('start-menu').addEventListener('click', function() {
+  // Если уже открыто меню, закрываем его
+  var existingMenu = document.getElementById('start-menu-window');
+  if (existingMenu) {
+    existingMenu.remove();
+    return;
+  }
+  var menuDiv = document.createElement('div');
+  menuDiv.id = 'start-menu-window';
+  menuDiv.style.position = 'absolute';
+  menuDiv.style.bottom = '50px';
+  menuDiv.style.left = '10px';
+  menuDiv.style.background = '#333';
+  menuDiv.style.padding = '10px';
+  menuDiv.style.border = '1px solid #555';
+  menuDiv.style.borderRadius = '4px';
+  menuDiv.style.display = 'flex';
+  menuDiv.style.flexDirection = 'column';
+  menuDiv.style.gap = '5px';
+  
+// Массив программ для меню "Пуск" (их пункты будут отображаться с иконкой и текстом)
+var programs = [
+   { name: 'Компьютер', id: 'app-computer', icon: 'https://img.icons8.com/color/48/000000/computer.png' },
+   { name: 'Модификация', id: 'app-modification', icon: 'https://img.icons8.com/color/48/000000/settings.png' },
+   { name: 'Календарь', id: 'app-calendar', icon: 'https://img.icons8.com/color/48/000000/calendar.png' },
+   { name: 'Обновление', id: 'app-update', icon: 'https://img.icons8.com/color/48/000000/refresh.png' },
+   { name: 'Калькулятор', id: 'app-calculator', icon: 'https://img.icons8.com/color/48/000000/calculator.png' },
+   { name: 'Quantum Antivirus', id: 'app-antivirus', icon: 'https://img.icons8.com/color/48/000000/virus.png' },
+   { name: 'Service Reporting', id: 'app-servicereporting', icon: 'https://img.icons8.com/color/48/000000/report-card.png' },
+   { name: 'История репортов', id: 'app-historyreports', icon: 'https://img.icons8.com/color/48/000000/time-machine.png' },
+   { name: 'Блокнот', id: 'app-notepad', icon: 'https://img.icons8.com/color/48/000000/note.png' },
+   { name: 'История записей', id: 'app-historynotes', icon: 'https://cdn-icons-png.flaticon.com/128/1800/1800196.png' },
+   { name: 'Media Player', id: 'app-mediaplayer', icon: 'https://img.icons8.com/?size=80&id=ORtEFEOdUpwI&format=png' },
+   { name: 'Paint', id: 'app-paint', icon: 'https://img.icons8.com/color/48/000000/paint-palette.png' },
+   { name: 'Writer', id: 'app-writer', icon: 'https://img.icons8.com/color/48/000000/edit-file.png' },
+   { name: 'Writer Files', id: 'app-writerfiles', icon: 'https://img.icons8.com/color/48/000000/file.png' },
+   { name: 'Крестики нолики', id: 'app-tictactoe', icon: 'https://img.icons8.com/color/48/000000/tic-tac-toe.png' },
+   { name: 'Змейка', id: 'app-snake', icon: 'https://img.icons8.com/color/48/000000/snake.png' }
+];
+
+programs.forEach(function(prog) {
+   var btn = document.createElement('div');
+   btn.style.cursor = 'pointer';
+   btn.style.display = 'flex';
+   btn.style.alignItems = 'center';
+   btn.style.padding = '5px';
+   btn.style.color = '#fff';
+   btn.style.borderRadius = '4px';
+   btn.style.transition = 'background 0.2s';
+   btn.onmouseover = function() { btn.style.background = '#444'; };
+   btn.onmouseout = function() { btn.style.background = 'none'; };
+
+   var iconImg = document.createElement('img');
+   iconImg.src = prog.icon;
+   iconImg.style.width = '20px';
+   iconImg.style.height = '20px';
+   iconImg.style.marginRight = '8px';
+   btn.appendChild(iconImg);
+   
+   var span = document.createElement('span');
+   span.textContent = prog.name;
+   btn.appendChild(span);
+   
+   btn.addEventListener('click', function(){
+     document.getElementById(prog.id).click();
+     menuDiv.remove();
+   });
+   menuDiv.appendChild(btn);
+});
+document.getElementById('desktop').appendChild(menuDiv);
+
+/* Проводник */
+document.getElementById('explorer').addEventListener('click', function() {
+  // В окне только текстовое содержимое без встроенной иконки
+  var explorerContent = '<button id="btn-fermos">C:\\FERMIONOS</button>';
+  var win = createWindow('win-explorer', 'Проводник', explorerContent);
+  setTimeout(function(){
+      win.querySelector('#btn-fermos').addEventListener('click', function(){
+         var subContent = '<button id="btn-fermit">fermion32</button>';
+         var win2 = createWindow('win-explorer-sub', 'Проводник', subContent);
+         setTimeout(function(){
+           win2.querySelector('#btn-fermit').addEventListener('click', function(){
+             var finalContent = 
+               '<p>Vertex Dynamics Corporation, 2025 Inc.</p>' +
+               '<p>Динамика Вершины</p>' +
+               '<p>Fermion OS</p>' +
+               '<p>Все права защищены.</p>';
+             createWindow('win-explorer-final', 'Проводник', finalContent);
+           });
+         }, 100);
+      });
+  }, 100);
+});
+
+
+/* Настройки */
+document.getElementById('settings').addEventListener('click', function() {
+  // Оставляем содержимое окна настроек без иконки
+  var settingsContent =
+    '<label>Звук: <select id="setting-sound"><option value="on">Вкл</option><option value="off">Выкл</option></select></label><br>' +
+    '<label>Уведомления: <select id="setting-notifications"><option value="on">Вкл</option><option value="off">Выкл</option></select></label><br>' +
+    '<label>Тема: <select id="setting-theme"><option value="white">Белая</option><option value="black">Черная</option></select></label><br>' +
+    '<label>Текущий язык: <select id="setting-language"><option value="ru">Русский</option><option value="en">Английский</option></select></label><br>' +
+    '<button id="save-settings">Сохранить настройки</button>' +
+    '<div id="settings-message" style="margin-top:10px;"></div>';
+  var win = createWindow('win-settings', 'Настройки', settingsContent);
+  
+  setTimeout(function(){
+     win.querySelector('#save-settings').addEventListener('click', function(){
+        var sound = win.querySelector('#setting-sound').value;
+        var notifications = win.querySelector('#setting-notifications').value;
+        var theme = win.querySelector('#setting-theme').value;
+        var language = win.querySelector('#setting-language').value;
+        if (theme === 'black'){
+          document.getElementById('desktop').style.filter = 'brightness(0.7)';
+        } else {
+          document.getElementById('desktop').style.filter = 'brightness(1)';
+        }
+        win.querySelector('#settings-message').innerHTML = "Настройки сохранены!";
+     });
+  }, 100);
+});
+
+
+/* Терминал */
+document.getElementById('terminal').addEventListener('click', function() {
+  // Окно терминала без иконки внутри содержимого
+  var terminalContent =
+    '<div id="terminal-output" style="height:200px; overflow:auto; background:#000; color:#0f0; padding:5px; font-family:monospace;"></div>' +
+    '<input type="text" id="terminal-input" style="width:100%; font-family:monospace; font-size:16px;" placeholder="Введите команду">';
+  var win = createWindow('win-terminal', 'Терминал', terminalContent);
+  
+  setTimeout(function(){
+     var outputDiv = win.querySelector('#terminal-output');
+     var input = win.querySelector('#terminal-input');
+  
+     function printOutput(text) {
+       outputDiv.innerHTML += text + "<br>";
+       outputDiv.scrollTop = outputDiv.scrollHeight;
+     }
+  
+     printOutput("Введите help для списка команд");
+  
+     input.addEventListener('keydown', function(e){
+       if(e.key === 'Enter') {
+         var cmd = input.value.trim();
+         printOutput("> " + cmd);
+         input.value = "";
+  
+         if(cmd === "help") {
+           printOutput("help");
+           printOutput("hello");
+           printOutput("hello fermion");
+           printOutput("goodbye fermion");
+           printOutput("time");
+           printOutput("chkupd");
+           printOutput("id");
+           printOutput("uptime");
+           printOutput("wifi");
+           printOutput("clearstory");
+           printOutput("exit");
+         } else if(cmd === "hello") {
+           printOutput("hello");
+         } else if(cmd === "hello fermion") {
+           printOutput("hello user");
+         } else if(cmd === "goodbye fermion") {
+           printOutput("bye user");
+         } else if(cmd === "time") {
+           printOutput(new Date().toLocaleTimeString());
+         } else if(cmd === "chkupd") {
+           printOutput("Проверка обновлений...");
+           setTimeout(function(){
+             printOutput("no updates");
+           }, 3000);
+         } else if(cmd === "id") {
+           printOutput("3021319140");
+         } else if(cmd === "uptime") {
+           printOutput("1 user");
+         } else if(cmd === "wifi") {
+           printOutput("enable");
+         } else if(cmd === "clearstory") {
+           outputDiv.innerHTML = "";
+         } else if(cmd === "exit") {
+           win.style.display = 'none';
+         } else {
+           printOutput("Неизвестная команда");
          }
-      
-         printOutput("Введите /help для списка команд");
-      
-         input.addEventListener('keydown', function(e){
-           if(e.key === 'Enter') {
-             var cmd = input.value.trim();
-             printOutput("> " + cmd);
-             input.value = "";
-      
-             if(cmd === "/help") {
-               printOutput("/help");
-               printOutput("/hello");
-               printOutput("/hello fermion");
-               printOutput("/goodbye fermion");
-               printOutput("/time");
-               printOutput("/chkupd");
-               printOutput("/id");
-               printOutput("/uptime");
-               printOutput("/wifi");
-               printOutput("/clearstory");
-               printOutput("/exit");
-             } else if(cmd === "/hello") {
-               printOutput("hello");
-             } else if(cmd === "/hello fermion") {
-               printOutput("hello user");
-             } else if(cmd === "/goodbye fermion") {
-               printOutput("bye user");
-             } else if(cmd === "/time") {
-               printOutput(new Date().toLocaleTimeString());
-             } else if(cmd === "/chkupd") {
-               printOutput("Проверка обновлений...");
-               setTimeout(function(){
-                 printOutput("no updates");
-               }, 3000);
-             } else if(cmd === "/id") {
-               printOutput("3021319140");
-             } else if(cmd === "/uptime") {
-               printOutput("1 user");
-             } else if(cmd === "/wifi") {
-               printOutput("enable");
-             } else if(cmd === "/clearstory") {
-               outputDiv.innerHTML = "";
-             } else if(cmd === "/exit") {
-               win.style.display = 'none';
-             } else {
-               printOutput("Неизвестная команда");
-             }
-           }
-         });
-      }, 100);
-    });
+       }
+     });
+  }, 100);
+});
 
-    /* Учетная запись */
-    document.getElementById('account').addEventListener('click', function() {
-      var accountContent =
-        '<p>Активация системы: <span id="activation-status">отсутствует</span> ' +
-        '<button id="activate-btn">Активировать</button></p>' +
-        '<p>Username: user</p>' +
-        '<p>Email: fermionuser@gmail.com</p>' +
-        '<p>Id: 3021319140</p>';
-      var win = createWindow('win-account', 'Учетная запись', accountContent);
-      
-      setTimeout(function(){
-         win.querySelector('#activate-btn').addEventListener('click', function(){
-           win.querySelector('#activation-status').innerHTML = "активирована";
-         });
-      }, 100);
-    });
 
-    /* --- Конец второй части кода (продолжение следует в третьей части) --- */
-
-	      // Дополнительный функционал и глобальные настройки можно добавлять здесь по необходимости.
-
+/* Учетная запись */
+document.getElementById('account').addEventListener('click', function() {
+  // Окно «Учетная запись» без вставленных иконок
+  var accountContent =
+    '<p>Username: user</p>' +
+    '<p>Email: fermionuser@gmail.com</p>' +
+    '<p>Id: 3021319140</p>';
+  createWindow('win-account', 'Учетная запись', accountContent);
+});
   </script>
 </body>
 </html>
